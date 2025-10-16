@@ -3,91 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Разписание на Автобуси</title>
+    <title>Автобусно разписание - Солнечный берег</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> </head>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
 <body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">
+                    <i class="fas fa-bus"></i>
+                    Автобусно разписание
+                </h1>
+                <div class="current-time" id="currentTime"></div>
+            </div>
+        </header>
 
-    <header>
-        <h1>Разписание на Автобуси</h1>
-        <div class="settings">
-            <label class="theme-switch">
-                <input type="checkbox" id="theme-toggle">
-                <span class="slider"></span>
-            </label>
-        </div>
-    </header>
-
-    <main>
-        <div class="bus-route-card" id="bus-2">
-            <div class="card-header">
-                <h2>Автобус №2</h2>
-                <p class="route-destinations">Слънчев бряг (Аквапарк) ↔ Несебър (Старият град)</p>
+        <!-- Bus Status Card -->
+        <div class="status-card" id="statusCard">
+            <div class="status-header">
+                <h2><i class="fas fa-map-marker-alt"></i> Текущо местоположение</h2>
             </div>
-            <div class="current-status">
-                <p id="status-2">Проверява се...</p>
-            </div>
-            <div class="tabs">
-                <button class="tab-button active" onclick="showSchedule('bus-2', 'workdays')">Работни дни</button>
-                <button class="tab-button" onclick="showSchedule('bus-2', 'weekends')">Почивни дни</button>
-            </div>
-            <div id="bus-2-workdays" class="schedule-content active">
-                <div class="schedule-column">
-                    <h3>От Слънчев бряг:</h3>
-                    <ul>
-                        </ul>
+            <div class="status-content">
+                <div class="bus-info" id="busInfo">
+                    <div class="bus-number" id="busNumber">-</div>
+                    <div class="bus-route" id="busRoute">-</div>
                 </div>
-                <div class="schedule-column">
-                    <h3>От Несебър (Старият град):</h3>
-                    <ul>
-                        </ul>
+                <div class="location-info" id="locationInfo">
+                    <div class="current-location" id="currentLocation">-</div>
+                    <div class="next-stop" id="nextStop">-</div>
                 </div>
-            </div>
-            <div id="bus-2-weekends" class="schedule-content">
-                <div class="schedule-column">
-                    <h3>От Слънчев бряг:</h3>
-                    <ul>
-                        </ul>
-                </div>
-                <div class="schedule-column">
-                    <h3>От Несебър (Старият град):</h3>
-                    <ul>
-                       </ul>
+                <div class="time-info" id="timeInfo">
+                    <div class="departure-time" id="departureTime">-</div>
+                    <div class="arrival-time" id="arrivalTime">-</div>
                 </div>
             </div>
         </div>
 
-        <div class="bus-route-card" id="bus-10">
-            <div class="card-header">
-                <h2>Автобус №10</h2>
-                <p class="route-destinations">Слънчев бряг ↔ Бургас</p>
-            </div>
-             <div class="current-status">
-                <p id="status-10">Проверява се...</p>
-            </div>
-            <p class="info-note">Маршрут: Слънчев бряг – Несебър – Равда – Ахелой – Поморие – Бургас</p>
-            <div class="schedule-content active">
-                 <div class="schedule-column">
-                    <h3>От Слънчев бряг:</h3>
-                    <ul>
-                        </ul>
+        <!-- Bus Routes -->
+        <div class="routes-container">
+            <!-- Bus Route 2 -->
+            <div class="route-card" data-route="2">
+                <div class="route-header">
+                    <h3><i class="fas fa-route"></i> Автобус №2</h3>
+                    <div class="route-description">Солнечный берег (Аквапарк) – Несебр (Старый город)</div>
                 </div>
-                <div class="schedule-column">
-                    <h3>От Бургас:</h3>
-                    <ul>
-                        </ul>
+                
+                <div class="schedule-tabs">
+                    <button class="tab-btn active" data-tab="weekdays-2">Рабочие дни</button>
+                    <button class="tab-btn" data-tab="weekends-2">Выходные дни</button>
                 </div>
-            </div>
-             <p class="info-note">*Рейсовете със звездичка се изпълняват само в учебни дни.</p>
-        </div>
-    </main>
 
-    <footer>
-        <p>Made by @Yutvaa</p>
-    </footer>
+                <div class="schedule-content">
+                    <div class="tab-content active" id="weekdays-2">
+                        <div class="direction">
+                            <h4><i class="fas fa-arrow-right"></i> От Солнечного берега</h4>
+                            <div class="times-grid" id="times-from-sunny-2">
+                                <!-- Times will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        <div class="direction">
+                            <h4><i class="fas fa-arrow-left"></i> От Несебра (Старый город)</h4>
+                            <div class="times-grid" id="times-from-nesebar-2">
+                                <!-- Times will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-content" id="weekends-2">
+                        <div class="direction">
+                            <h4><i class="fas fa-arrow-right"></i> От Солнечного берега</h4>
+                            <div class="times-grid" id="times-from-sunny-weekend-2">
+                                <!-- Times will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        <div class="direction">
+                            <h4><i class="fas fa-arrow-left"></i> От Несебра (Старый город)</h4>
+                            <div class="times-grid" id="times-from-nesebar-weekend-2">
+                                <!-- Times will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bus Route 10 -->
+            <div class="route-card" data-route="10">
+                <div class="route-header">
+                    <h3><i class="fas fa-route"></i> Автобус №10</h3>
+                    <div class="route-description">Солнечный берег – Несебр – Равда – Ахелой – Поморие – Бургас</div>
+                </div>
+                
+                <div class="schedule-tabs">
+                    <button class="tab-btn active" data-tab="weekdays-10">Рабочие дни</button>
+                    <button class="tab-btn" data-tab="weekends-10">Выходные дни</button>
+                </div>
+
+                <div class="schedule-content">
+                    <div class="tab-content active" id="weekdays-10">
+                        <div class="direction">
+                            <h4><i class="fas fa-arrow-right"></i> От Солнечного берега</h4>
+                            <div class="times-grid" id="times-from-sunny-10">
+                                <!-- Times will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        <div class="direction">
+                            <h4><i class="fas fa-arrow-left"></i> От Бургаса</h4>
+                            <div class="times-grid" id="times-from-burgas-10">
+                                <!-- Times will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-content" id="weekends-10">
+                        <div class="direction">
+                            <h4><i class="fas fa-arrow-right"></i> От Солнечного берега</h4>
+                            <div class="times-grid" id="times-from-sunny-weekend-10">
+                                <!-- Times will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        <div class="direction">
+                            <h4><i class="fas fa-arrow-left"></i> От Бургаса</h4>
+                            <div class="times-grid" id="times-from-burgas-weekend-10">
+                                <!-- Times will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Made by <a href="https://github.com/nhffaf" target="_blank">@nhffaf</a></p>
+        </footer>
+    </div>
 
     <script src="script.js"></script>
 </body>

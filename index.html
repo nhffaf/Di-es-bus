@@ -1,94 +1,314 @@
 <!DOCTYPE html>
-<html lang="bg">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Разписание на Автобуси</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> </head>
+    <title>Bus Schedule</title>
+    <!-- Viewport is crucial for old iOS to render width correctly -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Icon for Home Screen -->
+    <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/App_Store_%28iOS%29.svg/1024px-App_Store_%28iOS%29.svg.png">
+
+    <style type="text/css">
+        /* RESET & BASE */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Helvetica, Arial, sans-serif;
+            background-color: #c5ccd4; /* Classic iOS Grouped Background Color */
+            /* Pinstripe Texture Simulation using CSS3 Gradients supported in iOS4 */
+            background-image: 
+                -webkit-gradient(linear, left top, right top, color-stop(0, #c5ccd4), color-stop(0.5, #cbd2d8), color-stop(1, #c5ccd4));
+            background-size: 2px 100%;
+            -webkit-text-size-adjust: none;
+        }
+
+        /* HEADER (Navigation Bar Style) */
+        header {
+            width: 100%;
+            height: 44px;
+            background-image: -webkit-gradient(linear, left top, left bottom, from(#b0bccd), color-stop(0.5, #889bb3), color-stop(0.5, #8195af), to(#6d84a2));
+            border-bottom: 1px solid #2d3642;
+            -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            margin: 0;
+            line-height: 44px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 -1px 0 rgba(0,0,0,0.6);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* CONTENT CONTAINER */
+        #content {
+            padding: 15px 10px;
+        }
+
+        /* TABLE GROUP (The White Rounded Box) */
+        .group {
+            background: #fff;
+            border: 1px solid #ababab;
+            -webkit-border-radius: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* LINE TITLE (Clickable Row) */
+        .line-header {
+            padding: 12px 15px;
+            font-weight: bold;
+            font-size: 17px;
+            color: #000;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+            /* Gradient for "Touch" feel */
+            background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#f0f0f0));
+            position: relative;
+        }
+        
+        .line-header:active {
+            background-image: -webkit-gradient(linear, left top, left bottom, from(#0276FD), to(#0152b1));
+            color: white;
+        }
+
+        /* Arrow icon */
+        .line-header::after {
+            content: '›';
+            position: absolute;
+            right: 15px;
+            color: #999;
+            font-weight: bold;
+            font-size: 22px;
+            top: 8px;
+        }
+        
+        .line-header:active::after {
+            color: white;
+        }
+
+        /* DETAILS SECTION (Hidden by default) */
+        .details {
+            display: none;
+            padding: 15px;
+            background-color: #f7f7f7;
+            font-size: 14px;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        /* INTERNAL TYPOGRAPHY */
+        .details h3 {
+            margin: 10px 0 5px 0;
+            font-size: 15px;
+            color: #4c566c; /* iOS Label Blue */
+            text-shadow: 0 1px 0 #fff;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 2px;
+        }
+        
+        .details p {
+            margin: 5px 0;
+        }
+
+        .route-info {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .times {
+            font-family: "Courier New", Courier, monospace; /* Monospace for easier reading of numbers */
+            color: #000;
+        }
+
+        .note {
+            font-size: 11px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #4c566c;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+            padding-bottom: 20px;
+            font-weight: bold;
+        }
+
+    </style>
+    
+    <script type="text/javascript">
+        // Using old-school JS compatible with iOS 4 (ES3)
+        function toggleLine(id) {
+            var element = document.getElementById(id);
+            if (element.style.display === "block") {
+                element.style.display = "none";
+            } else {
+                element.style.display = "block";
+            }
+        }
+    </script>
+</head>
 <body>
 
     <header>
-        <h1>Разписание на Автобуси</h1>
-        <div class="settings">
-            <label class="theme-switch">
-                <input type="checkbox" id="theme-toggle">
-                <span class="slider"></span>
-            </label>
-        </div>
+        <h1>Sunny Beach Bus</h1>
     </header>
 
-    <main>
-        <div class="bus-route-card" id="bus-2">
-            <div class="card-header">
-                <h2>Автобус №2</h2>
-                <p class="route-destinations">Слънчев бряг (Аквапарк) ↔ Несебър (Старият град)</p>
-            </div>
-            <div class="current-status">
-                <p id="status-2">Проверява се...</p>
-            </div>
-            <div class="tabs">
-                <button class="tab-button active" onclick="showSchedule('bus-2', 'workdays')">Работни дни</button>
-                <button class="tab-button" onclick="showSchedule('bus-2', 'weekends')">Почивни дни</button>
-            </div>
-            <div id="bus-2-workdays" class="schedule-content active">
-                <div class="schedule-column">
-                    <h3>От Слънчев бряг:</h3>
-                    <ul>
-                        </ul>
-                </div>
-                <div class="schedule-column">
-                    <h3>От Несебър (Старият град):</h3>
-                    <ul>
-                        </ul>
-                </div>
-            </div>
-            <div id="bus-2-weekends" class="schedule-content">
-                <div class="schedule-column">
-                    <h3>От Слънчев бряг:</h3>
-                    <ul>
-                        </ul>
-                </div>
-                <div class="schedule-column">
-                    <h3>От Несебър (Старият град):</h3>
-                    <ul>
-                       </ul>
-                </div>
+    <div id="content">
+        
+        <!-- LINE 1 -->
+        <div class="group">
+            <div class="line-header" onclick="toggleLine('line1')">Line 1: SB – Nessebar</div>
+            <div id="line1" class="details">
+                <div class="route-info">Route: Emona – Center – Continental – Stadium – Old Town</div>
+                
+                <h3>Working Days</h3>
+                <p><strong>From Sunny Beach:</strong><br>
+                <span class="times">06:30, 06:45, 07:00, 07:15, 07:30, 07:45, 08:10, 08:30, 09:05, 09:50, 10:20, 10:45, 11:05, 11:20, 11:50, 12:25, 12:40, 13:00, 13:35, 14:05, 14:30, 14:35, 14:50, 15:35, 16:05, 16:45, 17:10, 17:30, 17:45, 18:10, 18:30, 19:15, 19:40, 20:45</span></p>
+                
+                <p><strong>From Nessebar:</strong><br>
+                <span class="times">06:45... 08:30, 09:05, 12:45, 13:35, 15:50, 17:00, 18:00, 19:40, 21:00, 21:40*, 22:50*</span></p>
+
+                <h3>Weekend / Holidays</h3>
+                <p><strong>From Sunny Beach:</strong><br>
+                <span class="times">06:30, 06:45, 07:00, 07:45, 08:15, 08:45, 10:00, 10:40, 11:45, 12:45, 13:15, 13:45, 14:45, 15:15, 15:45, 16:15, 16:45, 17:15, 17:45, 18:15, 18:45, 19:45</span></p>
+
+                <p><strong>From Nessebar:</strong><br>
+                <span class="times">06:45, 07:00, 07:30, 08:00, 08:30, 09:00, 10:15, 10:55, 12:00, 13:00, 13:30, 14:00, 15:00, 15:30, 16:00, 16:30, 17:00, 17:30, 18:00, 18:30, 19:00, 20:00, 21:35*, 22:45*</span></p>
+                
+                <div class="note">*Bus from/via Burgas.</div>
             </div>
         </div>
 
-        <div class="bus-route-card" id="bus-10">
-            <div class="card-header">
-                <h2>Автобус №10</h2>
-                <p class="route-destinations">Слънчев бряг ↔ Бургас</p>
+        <!-- LINE 2 -->
+        <div class="group">
+            <div class="line-header" onclick="toggleLine('line2')">Line 2: SB – Aquapark</div>
+            <div id="line2" class="details">
+                <div class="route-info">Sunny Beach (Aquapark) – Black Sea District – Nessebar</div>
+                
+                <h3>Working Days</h3>
+                <p><strong>From SB (Aquapark):</strong><br>
+                <span class="times">06:50, 07:30, 08:30, 09:30, 10:30, 11:40, 12:45, 13:45, 14:40, 15:30, 16:30, 17:50, 18:45, 20:00</span></p>
+                <p><strong>From Nessebar:</strong><br>
+                <span class="times">07:10, 08:00, 09:00, 10:00, 11:00, 12:25, 13:10, 14:15, 15:00, 16:00, 17:10, 18:20, 19:15, 20:30</span></p>
+
+                <h3>Weekend</h3>
+                <p><strong>From SB (Aquapark):</strong> 07:35, 08:30, 11:15, 14:15, 16:00, 17:30</p>
+                <p><strong>From Nessebar:</strong> 08:15, 09:30, 12:30, 14:45, 16:45, 18:15</p>
             </div>
-             <div class="current-status">
-                <p id="status-10">Проверява се...</p>
-            </div>
-            <p class="info-note">Маршрут: Слънчев бряг – Несебър – Равда – Ахелой – Поморие – Бургас</p>
-            <div class="schedule-content active">
-                 <div class="schedule-column">
-                    <h3>От Слънчев бряг:</h3>
-                    <ul>
-                        </ul>
-                </div>
-                <div class="schedule-column">
-                    <h3>От Бургас:</h3>
-                    <ul>
-                        </ul>
-                </div>
-            </div>
-             <p class="info-note">*Рейсовете със звездичка се изпълняват само в учебни дни.</p>
         </div>
-    </main>
 
-    <footer>
-        <p>Made by @Yutvaa</p>
-    </footer>
+        <!-- LINE 4 -->
+        <div class="group">
+            <div class="line-header" onclick="toggleLine('line4')">Line 4: SB – Kosharitsa</div>
+            <div id="line4" class="details">
+                <h3>Working Days</h3>
+                <p><strong>Nessebar:</strong> 06:45, 07:45, 10:35, 12:10, 13:15, 16:30, 18:45</p>
+                <p><strong>Sunny Beach:</strong> 07:00, 08:05, 10:50, 12:25, 13:30, 15:30, 17:00, 19:00, 20:10</p>
+                <p><strong>Kosharitsa:</strong> 06:15, 07:15, 08:45, 11:10*, 12:45, 13:50, 15:50, 17:15, 19:15*</p>
 
-    <script src="script.js"></script>
+                <h3>Weekend</h3>
+                <p><strong>Nessebar:</strong> 06:45, 08:30, 12:00, 15:00, 17:00, 19:00</p>
+                <p><strong>Sunny Beach:</strong> 07:00, 09:00**, 12:15, 15:15, 17:15, 19:15</p>
+                <p><strong>Kosharitsa:</strong> 07:20*, 09:40, 13:00, 15:30, 17:30, 19:30*</p>
+                
+                <div class="note">*To SB Bus Station. **Via Sveti Vlas.</div>
+            </div>
+        </div>
+
+        <!-- LINE 5 -->
+        <div class="group">
+            <div class="line-header" onclick="toggleLine('line5')">Line 5: SB – Sveti Vlas</div>
+            <div id="line5" class="details">
+                <h3>Working Days</h3>
+                <p><strong>Nessebar:</strong> 07:00 - 21:00 (approx hourly)</p>
+                <p><strong>Sunny Beach:</strong> 06:15, 07:15, 08:20... 20:10, 21:15</p>
+                <p><strong>Sveti Vlas:</strong> 05:50*, 06:30... 20:30, 21:30*</p>
+
+                <h3>Weekend</h3>
+                <p><strong>Nessebar:</strong> 07:00, 08:30, 13:00, 16:00, 17:30</p>
+                <p><strong>Sunny Beach:</strong> 06:15, 07:15, 09:00, 11:00, 13:15, 14:45, 16:15, 17:45, 19:15, 20:15</p>
+                <p><strong>Sveti Vlas:</strong> 06:30, 07:30, 09:15**, 11:15*, 13:30, 15:00, 16:30, 18:00*, 19:30, 20:30*</p>
+            </div>
+        </div>
+
+        <!-- LINE 6 -->
+        <div class="group">
+            <div class="line-header" onclick="toggleLine('line6')">Line 6: SB – Gyulyovtsa</div>
+            <div id="line6" class="details">
+                <h3>Working Days</h3>
+                <p><strong>Nessebar:</strong> 07:15, 11:05, 15:15, 19:55</p>
+                <p><strong>Sunny Beach:</strong> 07:40, 10:00, 11:30, 13:45, 15:35, 16:30, 17:00, 18:45, 20:10</p>
+                <p><strong>Gyulyovtsa:</strong> 06:20, 07:00, 08:15, 10:30, 12:00, 14:15, 16:15, 17:40, 19:10</p>
+            </div>
+        </div>
+
+        <!-- LINE 7 -->
+        <div class="group">
+            <div class="line-header" onclick="toggleLine('line7')">Line 7: SB – Pomorie</div>
+            <div id="line7" class="details">
+                <div class="route-info">Via Nessebar, Ravda, Aheloy.</div>
+                <p><strong>Sunny Beach:</strong> 06:45, 12:40, 17:00</p>
+                <p><strong>Pomorie Center:</strong> 07:30, 14:15, 17:45</p>
+                <div class="note">No service on Weekends/Holidays.</div>
+            </div>
+        </div>
+
+        <!-- LINE 8 -->
+        <div class="group">
+            <div class="line-header" onclick="toggleLine('line8')">Line 8: SB – Elenite</div>
+            <div id="line8" class="details">
+                <h3>Working Days</h3>
+                <p><strong>Sunny Beach:</strong> 06:30, 10:00, 11:15, 13:35, 14:35, 15:35, 18:00, 19:35</p>
+                <p><strong>Elenite:</strong> 06:55, 10:30, 11:45, 14:00, 15:00, 16:00, 18:30, 20:00</p>
+
+                <h3>Weekend</h3>
+                <p><strong>Sunny Beach:</strong> 10:00, 12:00, 15:20</p>
+                <p><strong>Elenite:</strong> 10:30, 12:30, 15:50</p>
+            </div>
+        </div>
+
+        <!-- LINE 10 -->
+        <div class="group">
+            <div class="line-header" onclick="toggleLine('line10')">Line 10: SB – Burgas (Pomorie)</div>
+            <div id="line10" class="details">
+                <div class="route-info">Via Nessebar, Ravda, Aheloy, Pomorie.</div>
+                <p><strong>From Sunny Beach:</strong><br>
+                <span class="times">06:10*, 06:50... every 40 mins ... 20:20, 21:00</span></p>
+                <p><strong>From Burgas:</strong><br>
+                <span class="times">06:10... every 40 mins ... 20:20*, 20:50, 22:05</span></p>
+            </div>
+        </div>
+
+        <!-- LINE 22 -->
+        <div class="group">
+            <div class="line-header" onclick="toggleLine('line22')">Line 22: SB – Burgas (Kableshkovo)</div>
+            <div id="line22" class="details">
+                <div class="route-info">Via Aheloy, Kableshkovo, Laka.</div>
+                <p><strong>From SB & Burgas (Same):</strong><br>
+                <span class="times">06:20, 07:10... every 40 mins ... 19:50, 21:20</span></p>
+            </div>
+        </div>
+
+        <div class="footer">
+            Operated by Di Es Bus & M-Bus.<br>
+            Valid from October 11, 2025.
+        </div>
+
+    </div>
+
 </body>
 </html>
